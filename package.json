@@ -1,0 +1,21 @@
+{
+    "name": "agenda",
+    "version": "0.0.1",
+    "description": "Agenda MongoDB",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [
+        "Node.js",
+        "Http"
+    ],
+    "author": "Marlon Malagon",
+    "license": "ISC",
+    "dependencies": {
+        "bluebird": "^3.5.3",
+        "body-parser": "^1.18.3",
+        "express": "^4.16.4",
+        "mongoose": "^5.4.6"
+    }
+}
