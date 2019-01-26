@@ -28,34 +28,39 @@
             <div class="formTitle">Programar Evento</div>
             <div class="separator"></div>
             <div class="form-inputs">
-                <input type="text" id="titulo" placeholder="Nombre del evento" />
-                <input type="text" id="start_date" placeholder="Fecha de inicio" />
-                <div class="eventDuration">
-                    <input type="checkbox" id="allDay" class="radio-input" />
-                    <label class="duration-label" for="allDay">Día completo</label>
-                </div>
-                <input type="text" id="end_date" placeholder="Fecha fin" />
-                <div class="form-group">
-                    <input type="text" id="start_hour" placeholder="Hora de inicio" class="timepicker hour-input left" />
-                    <input type="text" id="end_hour" placeholder="Hora fin" class="timepicker hour-input right" />
-                </div>
-                <button id="save" class="addButton">Añadir evento</button>
+                <form autocomplete="off" class="form-inputs">
+                    <input type="text" id="titulo" placeholder="Nombre del evento" required />
+                    <input type="text" id="start_date" placeholder="Fecha de inicio" required />
+                    <div class="eventDuration">
+                        <input type="checkbox" id="allDay" class="radio-input" checked="checked" />
+                        <label class="duration-label" for="allDay">Día completo</label>
+                    </div>
+                    <input type="text" id="end_date" placeholder="Fecha fin" disabled="disabled" />
+                    <div class="form-group">
+                        <input type="text" id="start_hour" placeholder="Hora de inicio" class="timepicker hour-input left" disabled="disabled" />
+                        <input type="text" id="end_hour" placeholder="Hora fin" class="timepicker hour-input right" disabled="disabled" />
+                    </div>
+                    <button type="submit" id="save" class="addButton">Añadir evento</button>
+                </form>
             </div>
             <div id="deleteEvent" class="delete">
                 <div class="drop-event">Eliminar evento</div>
                 <img id="delete-icon" src="img/trash.png" />
             </div>
             <div class="logout-container">
-                <img class="logout-image" src="img/logout.png" />
-                <div class="logoutText" id="logout">Cerrar Sesión</div>
+                <div class="logoutText" id="logout">
+                    <img class="logout-image" src="img/logout.png" />Cerrar Sesión
+                </div>
             </div>
         </div>
     </div>
-    <script src="js/jquery.js"></script>
-    <script src="http://momentjs.com/downloads/moment.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
-    <script src="js/fullcalendar.min.js"></script>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
+
+    <script src="js/jquery.js" type="text/javascript"></script>
+    <script src="js/moment.min.js" type="text/javascript"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" type=" text/javascript "></script>
+    <script src="js/fullcalendar.min.js" type="text/javascript"></script>
+    <script src="js/es.js" type="text/javascript"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js" type="text/javascript"></script>
     <script src="js/app.js" type="text/javascript"></script>
     <!--script src="bundle.js"></script-->
 </body>

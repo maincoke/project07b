@@ -21,34 +21,61 @@ class EventManager {
     }
 
     guardarEvento() {
-        $('.addButton').on('click', (ev) => {
-            ev.preventDefault();
+        $('.addButton').on('click', (evt) => {
+            evt.preventDefault();
             let title = $('#titulo').val(),
                 start = $('#start_date').val(),
+                allday = $('#allDay').prop('checked'),
                 end = '',
                 start_hour = '',
-                end_hour = '';
+                end_hour = '',
+                ev = {},
+                evdb = {};
 
-            if (!$('#allDay').prop('checked')) {
-                end = $('#end_date').val();
-                start_hour = $('#start_hour').val();
-                end_hour = $('#end_hour').val();
-                start = start + 'T' + start_hour;
-                end = end + 'T' + end_hour;
-            }
             if (title != "" && start != "") {
-                let ev = {
-                    title: title,
-                    start: start,
-                    end: end
-                };
-                $.post(this.urlBase + "/new", ev, (response) => {
+                if (!allday) {
+                    end = $('#end_date').val();
+                    start_hour = $('#start_hour').val();
+                    end_hour = $('#end_hour').val();
+                    start = start + 'T' + start_hour;
+                    end = end + 'T' + end_hour;
+                    ev = { title: title, start: start, end: end, allDay: allday };
+                    evdb = { titlesevt: title, dbeginevt: start, datendevt: end, tbeginevt: start_hour, timendevt: end_hour, alldayevt: allday }
+                } else {
+                    ev = { title: title, start: start, allDay: allday };
+                    evdb = { titlesevt: title, dbeginevt: start, alldayevt: allday }
+                }
+                $.post(this.urlBase + "/new", evdb, (response) => {
                     alert(response);
                 });
                 $('.calendario').fullCalendar('renderEvent', ev);
             } else {
                 alert("Complete los campos obligatorios para el evento");
+                this.inicializarFormulario();
             }
+        });
+    }
+
+    actualizarEvento(evento) {
+        let start = moment(evento.start).format('YYYY-MM-DD HH:mm:ss'),
+            end = moment(evento.end).format('YYYY-MM-DD HH:mm:ss'),
+            allday = evento.allDay,
+            start_date,
+            end_date,
+            start_hour,
+            end_hour,
+            event = {};
+        start_date = start.substr(0, 10);
+        if (!allday) {
+            end_date = end.substr(0, 10);
+            start_hour = start.substr(11, 8);
+            end_hour = end.substr(11, 8);
+            event = { identievt: evento.id, dbeginevt: start_date, datendevt: end_date, tbeginevt: start_hour, timendevt: end_hour };
+        } else {
+            event = { identievt: evento.id, dbeginevt: start_date };
+        }
+        $.post(this.urlBase + '/update' + evento.id, event, (response) => {
+            alert(data.msg);
         });
     }
 
@@ -62,13 +89,17 @@ class EventManager {
             interval: 30,
             minTime: '5',
             maxTime: '23:59:59',
-            defaultTime: '',
+            defaultTime: '7',
             startTime: '5:00',
             dynamic: false,
             dropdown: true,
             scrollbar: true
         });
-        $('#allDay').on('change', function() {
+        $('#start_date').on('change', function() {
+            $('#end_date').val($(this).val());
+        });
+        $('.timepicker, #end_date').attr("disabled", "disabled");
+        $('#allDay').prop('checked', 'checked').on('change', function() {
             if (this.checked) {
                 $('.timepicker, #end_date').attr("disabled", "disabled");
             } else {
@@ -88,10 +119,16 @@ class EventManager {
                 center: 'title',
                 right: 'month,agendaWeek,basicDay'
             },
+            locale: 'es',
+            weekNumberCalculation: 'ISO',
+            timezone: 'local',
+            nowIndicator: true,
             fixedWeekCount: false,
+            aspectRatio: 1.70,
             defaultDate: now.substr(0, 10),
             navLinks: true,
-            editable: true,
+            eventStartEditable: true,
+            eventDurationEditable: false,
             eventLimit: true,
             droppable: true,
             dragRevertDuration: 0,
