@@ -44,7 +44,7 @@ body {
     justify-content: center;
 }
 
-input {
+.loginContainer input {
     width: 350px;
     height: 25px;
     padding: 5px;
@@ -70,4 +70,57 @@ input {
     background: #1270b6;
     font-family: 'Kaushan Script', cursive;
     font-family: 'Neucha', cursive;
+}
+
+.modal-dialog {
+    background: #e0e0e0;
+}
+
+.modal-row {
+    margin: 0.5rem 0 !important;
+}
+
+.modal-container {
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    flex-flow: row wrap;
+    justify-content: space-between;
+}
+
+.modal-container input {
+    display: flex;
+    color: #000 !important;
+    margin-bottom: 0.5rem !important;
+}
+
+.modal-container input::placeholder,
+.modal-row span {
+    font-size: 0.7em;
+}
+
+#termsconds {
+    display: inline-flex !important;
+}
+
+.modal-row button[disabled='disabled'] {
+    background: #e0e0e0;
+    color: #919191 !important;
+}
+
+#userSignup,
+#signupuser form * {
+    font-family: 'Neucha', cursive;
+    color: #FFFFFF;
+    margin-top: 0.5rem;
+}
+
+#userSignup a {
+    color: #1270b6;
+}
+
+.ui-button.ui-dialog-titlebar-close {
+    position: relative !important;
+    float: right !important;
+    margin-top: 0.3rem !important;
 }

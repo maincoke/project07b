@@ -17,7 +17,7 @@ Router.get('/', function(req, res) {
 });
 
 // Agregar un usuario
-Router.post('/new', function(req, res) {
+Router.post('/newuser', function(req, res) {
     let newuser = new User({
         userId: Math.floor(Math.random() * 50),
         fnames: req.body.fnames,

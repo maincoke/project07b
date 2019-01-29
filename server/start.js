@@ -10,7 +10,7 @@ const app = express();
 const Server = http.createServer(app);
 
 const urldb = 'mongodb://localhost/schedule';
-mongoose.connect(urldb, { useMongoClient: true });
+mongoose.connect(urldb, { useNewUrlParser: true });
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error: '));
 db.once('open', function() {
