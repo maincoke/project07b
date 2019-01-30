@@ -2,15 +2,14 @@ const Router = require('express').Router();
 const bcrypt = require('bcrypt');
 const session = require('express-session');
 const mongoose = require('mongoose');
-const objectId = mongoose.Schema.Types.ObjectId;
+const objectId = mongoose.Types.ObjectId;
 const User = require('./model.js');
 const BCRYPT_SALT_ROUNDS = 6;
 
-// Verificación de Login, acceso y configuración de sesion //
+// Verificación de Login, acceso y configuración de sesion del Usuario //
 Router.post('/login', function(req, res) {
     let username = req.body.user,
         userpass = req.body.pass;
-    console.log(username + ' ' + userpass);
     User.findOne({ emailusr: username }).exec()
         .then(doc => {
             console.log(doc.pwordusr);
@@ -33,7 +32,7 @@ Router.post('/login', function(req, res) {
         });
 });
 
-// Agregar un usuario 
+// Inclusión de datos básicos del Usuario  //
 Router.post('/newuser', function(req, res) {
     let pworduser = req.body.user_pword;
     bcrypt.hash(pworduser, BCRYPT_SALT_ROUNDS)
@@ -58,7 +57,9 @@ Router.post('/newuser', function(req, res) {
         });
 });
 
-// Eliminar un usuario por su ID
+
+
+// Eliminación de evento en la agenda del Usuario //
 Router.post('/delete/:id', function(req, res) {
     let userid = req.params.id;
     User.remove({ userId: userid }).then(() => {

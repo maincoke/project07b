@@ -11,7 +11,7 @@ let EventSchema = new dataSchema({
     tbeginevt: { type: Date, alias: 'tbegin' },
     timendevt: { type: Date, alias: 'tend' },
     alldayevt: { type: Boolean, require: true, alias: 'allday' }
-});
+}, { _id: false });
 
 let UserSchema = new dataSchema({
     identusr: { type: objectId, unique: true, alias: 'idusr' },
@@ -20,7 +20,7 @@ let UserSchema = new dataSchema({
     emailusr: { type: String, lowercase: true, trim: true, require: true, alias: 'email' },
     pwordusr: { type: String, require: true, alias: 'pword' },
     schedule: EventSchema
-});
+}, { id: false });
 
 let UserData = mongoose.model('Usuario', UserSchema);
 module.exports = UserData;

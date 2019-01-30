@@ -32,7 +32,6 @@ class SignupUser {
             }
             $.post("/schedule/newuser", newuser, (response) => {
                 alert(response.msg);
-                console.log(response.id);
             });
         }
         $('#signupuser').dialog('close');
