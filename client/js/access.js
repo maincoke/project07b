@@ -18,31 +18,47 @@ class SignupUser {
         if ($('#usrpasswd').val() !== $('#useragain').val() ||
             (!$('#usremaila').val().includes('@') || !$('#usremaila').val().includes('.'))) {
             let wrongData = $('#usrpasswd').val() !== $('#useragain').val() ? true : false;
-            $('#signupuser').dialog('close');
             if (wrongData) {
                 alert('Las contraseña y la confirmación no coinciden!! Deben ser iguales!!');
             } else {
                 alert('La dirección de correo electrónico no es válido!!');
             }
         } else {
-            $.post("/schedule/newuser", (response) => {
-                alert(responde);
+            let newuser = {
+                user_names: $('#usrfnames').val() + ' ' + $('#usrlnames').val(),
+                user_dbirt: $('#usrdbirth').val(),
+                user_email: $('#usremaila').val(),
+                user_pword: $('#usrpasswd').val()
+            }
+            $.post("/schedule/newuser", newuser, (response) => {
+                alert(response.msg);
+                console.log(response.id);
             });
         }
+        $('#signupuser').dialog('close');
     }
 
     initSignUp() {
+        let lowdate = new Date(new Date().getFullYear() - 90, 0, 1),
+            highdate = new Date(new Date().getFullYear() - 10, 11, 31);
         $('#usrdbirth').datepicker({
             firstDay: 1,
-            minDate: new Date(1940, 0, 1),
-            dateFormat: 'dd/mm/yy',
+            minDate: lowdate,
+            maxDate: highdate,
+            defaultDate: highdate,
+            dateFormat: 'yy-mm-dd',
             altFormat: 'yy-mm-dd',
             autoSize: true,
             showOtherMonths: true,
-            selectOtherMonths: true,
             nextText: 'Siguiente',
             prevText: 'Anterior',
-            closeText: 'Cerrar'
+            closeText: 'Cerrar',
+            dayNamesMin: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'],
+            monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+            changeYear: true,
+            changeMonth: true,
+            yearRange: lowdate.getFullYear().toString() + ":" + highdate.getFullYear().toString(),
+            gotoCurrent: true
         });
         $('#signupuser').dialog({
             title: 'Registro - Datos de Usuario',
@@ -71,11 +87,14 @@ $(function() {
         event.preventDefault();
         let nombreUsuario = $('#user').val();
         let passwd = $('#pass').val();
-        console.log(nombreUsuario + ' ' + passwd);
         if (nombreUsuario != "" && passwd != "") {
             $.post('/schedule/login', { user: nombreUsuario, pass: passwd }, function(response) {
-                if (response == "Validado") {
+                if (response.access == "ok") {
+                    $('#user, #pass').val('');
                     window.location.href = "http://localhost:3000/main.html";
+                } else {
+                    alert(response.msg);
+                    $('#user, #pass').val('');
                 }
             });
         } else {

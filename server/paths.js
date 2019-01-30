@@ -1,10 +1,68 @@
 const Router = require('express').Router();
+const bcrypt = require('bcrypt');
+const session = require('express-session');
+const mongoose = require('mongoose');
+const objectId = mongoose.Schema.Types.ObjectId;
 const User = require('./model.js');
+const BCRYPT_SALT_ROUNDS = 6;
 
-// Obtener todos los eventos de calendario del usuario
-Router.get('/all', function(req, res) {
-    User.find({}).exec().then(docs => {
-        res.json(docs);
+// Verificación de Login, acceso y configuración de sesion //
+Router.post('/login', function(req, res) {
+    let username = req.body.user,
+        userpass = req.body.pass;
+    console.log(username + ' ' + userpass);
+    User.findOne({ emailusr: username }).exec()
+        .then(doc => {
+            console.log(doc.pwordusr);
+            bcrypt.compare(userpass, doc.pwordusr)
+                .then(validPword => {
+                    let result;
+                    if (!validPword) {
+                        result = { access: '', msg: 'Las credenciales no son válidas!! La contraseña no es correcta!!' };
+                    } else {
+                        result = { id: doc.identusr, access: 'ok' };
+                    }
+                    res.send(result);
+                });
+        })
+        .catch(error => {
+            let wrong = { access: '', msg: 'Cuenta de usuario no se encuentra registrada!!' };
+            res.send(wrong);
+            console.log('Error en la autenticación del usuario: ');
+            console.error(error);
+        });
+});
+
+// Agregar un usuario 
+Router.post('/newuser', function(req, res) {
+    let pworduser = req.body.user_pword;
+    bcrypt.hash(pworduser, BCRYPT_SALT_ROUNDS)
+        .then(function(pwordHashed) {
+            let newuser = new User({
+                identusr: new objectId,
+                namesusr: req.body.user_names,
+                dbirtusr: req.body.user_dbirt,
+                emailusr: req.body.user_email,
+                pwordusr: pwordHashed,
+            });
+            newuser.save().then(doc => {
+                let result = { id: doc.identusr, msg: "Registro de usuario agregado con éxito!!" };
+                res.send(result);
+            });
+        })
+        .catch(function(error) {
+            let wrong = { msg: "Hubo un error en el registro de usuario!!" };
+            res.send(wrong);
+            console.log('Error en el registro de usuario: ');
+            console.error(error);
+        });
+});
+
+// Eliminar un usuario por su ID
+Router.post('/delete/:id', function(req, res) {
+    let userid = req.params.id;
+    User.remove({ userId: userid }).then(() => {
+        res.send("El usuario fue eliminado con éxito!!");
     });
 });
 
@@ -16,38 +74,11 @@ Router.get('/', function(req, res) {
     });
 });
 
-// Agregar un usuario
-Router.post('/newuser', function(req, res) {
-    let newuser = new User({
-        userId: Math.floor(Math.random() * 50),
-        fnames: req.body.fnames,
-        lnames: req.body.lnames,
-        ageusr: req.body.ageusr,
-        gender: req.body.gender,
-        status: req.body.status
+// Obtener todos los eventos de calendario del usuario
+Router.get('/all', function(req, res) {
+    User.find({}).exec().then(docs => {
+        res.json(docs);
     });
-    newuser.save().then(doc => {
-        let result = { id: doc.userId, msg: "Registro de usuario agregado con éxito!!" };
-        res.send(result);
-    });
-});
-
-// Eliminar un usuario por su ID
-Router.post('/delete/:id', function(req, res) {
-    let userid = req.params.id;
-    User.remove({ userId: userid }).then(() => {
-        res.send("El usuario fue eliminado con éxito!!");
-    });
-});
-
-// Inactivar un usuario por su ID
-Router.post('/inactive/:id', function(req, res) {
-
-});
-
-// Activar un usuario por su ID
-Router.post('/active/:id', function(req, res) {
-
 });
 
 module.exports = Router;
