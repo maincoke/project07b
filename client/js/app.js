@@ -7,21 +7,29 @@ class EventManager {
     }
 
     obtenerDataInicial() {
-        let url = this.urlBase + "/all";
-        $.get(url, (response) => {
-            this.inicializarCalendario(response);
-        });
+        let urlall = this.urlBase + "/all";
+        $.get(urlall, (response) => {
+                console.log(response);
+                $(`<div id="useraccount">${response.username}</div>`).appendTo('.headerCalendar').filter(':first');
+                this.inicializarCalendario(response.schedule);
+            })
+            .fail(() => {
+                alert('No existe una sessión inicializada!!');
+                window.location.href = '../index.html';
+            });
     }
 
     eliminarEvento(evento) {
-        let eventId = evento.id;
-        $.post(this.urlBase + '/delete/' + eventId, { id: eventId }, (response) => {
+        let eventId = evento.id,
+            urldel = this.urlBase + "/delete/";
+        $.post(urldel + eventId, { id: eventId }, (response) => {
             alert(response);
         });
     }
 
     guardarEvento() {
-        $('.addButton').on('click', (evt) => {
+        let urlnew = this.urlBase + "/new";
+        $('.addButton').click((evt) => {
             evt.preventDefault();
             let title = $('#titulo').val(),
                 start = $('#start_date').val(),
@@ -45,7 +53,7 @@ class EventManager {
                     ev = { title: title, start: start, allDay: allday };
                     evdb = { titlesevt: title, dbeginevt: start, alldayevt: allday }
                 }
-                $.post(this.urlBase + "/new", evdb, (response) => {
+                $.post(urlnew, evdb, (response) => {
                     alert(response);
                 });
                 $('.calendario').fullCalendar('renderEvent', ev);
@@ -106,10 +114,10 @@ class EventManager {
                 $('.timepicker, #end_date').removeAttr("disabled");
             }
         });
+        let urlLogout = this.urlBase + '/logout';
         $('#logout').click(function() {
-            //$('#delete-icon').attr('src', '../img/trash-open.png');
-            $.get(EventManager.urlBase + '/logout', function(response) {
-                alert(response.msg);
+            $.get(urlLogout, function() {
+                window.location.href = '../index.html';
             });
         });
     }

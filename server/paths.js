@@ -6,15 +6,14 @@ const mongoose = require('mongoose');
 const objectId = mongoose.Types.ObjectId;
 const User = require('./model.js');
 const BCRYPT_SALT_ROUNDS = 6;
-let sessusr;
 
 // Verificación y regeneración de sesión del Usuario //
 Router.get('/', function(req, res) {
-    sessusr = req.session;
+    let sessusr = req.session;
     if (sessusr.username) {
-        res.render('../client/main.html');
+        res.redirect('/all');
     } else {
-        res.render('../client/index.html')
+        res.redirect('/');
     }
 });
 
@@ -30,7 +29,7 @@ Router.post('/login', function(req, res) {
                     if (!validPword) {
                         result = { access: '', msg: 'Las credenciales no son válidas!! La contraseña no es correcta!!' };
                     } else {
-                        sessusr = req.session;
+                        let sessusr = req.session;
                         sessusr.username = username;
                         sessusr.userId = doc.identusr;
                         result = { id: doc.identusr, username: doc.emailusr, access: 'ok' };
@@ -102,9 +101,22 @@ Router.get('/', function(req, res) {
 
 // Obtener todos los eventos de calendario del usuario
 Router.get('/all', function(req, res) {
-    User.find({}).exec().then(docs => {
-        res.json(docs);
-    });
+    let sessusr = req.session;
+    if (sessusr.username) {
+        User.findOne({ emailusr: sessusr.username }).exec()
+            .then(doc => {
+                let datauser = { username: doc.emailusr, eventos: doc.schedule };
+                res.json(datauser);
+            })
+            .catch(error => {
+                let wrong = { msg: 'Cuenta de usuario no existe ó expiró la sessión!!' };
+                res.send(wrong);
+                console.log('Error en la autenticación del usuario: ');
+                console.error(error);
+            });
+    } else {
+        res.status(400).send();
+    }
 });
 
 module.exports = Router;

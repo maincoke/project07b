@@ -26,10 +26,11 @@ app.use(session({
     },
     secret: 'Schedule Evt',
     name: 'schedule.id',
+    resave: false,
     rolling: true,
     saveUninitialized: false,
     cookie: { maxAge: 120000 },
-    store: new levelSession('./schedule/sessions/users')
+    store: new levelSession('./user/session/schedule')
 }));
 app.use(express.static('../client'));
 app.use(bodyParser.json());
