@@ -1,10 +1,22 @@
 const Router = require('express').Router();
 const bcrypt = require('bcrypt');
 const session = require('express-session');
+const levelSession = require('level-session-store');
 const mongoose = require('mongoose');
 const objectId = mongoose.Types.ObjectId;
 const User = require('./model.js');
 const BCRYPT_SALT_ROUNDS = 6;
+let sessusr;
+
+// Verificación y regeneración de sesión del Usuario //
+Router.get('/', function(req, res) {
+    sessusr = req.session;
+    if (sessusr.username) {
+        res.render('../client/main.html');
+    } else {
+        res.render('../client/index.html')
+    }
+});
 
 // Verificación de Login, acceso y configuración de sesion del Usuario //
 Router.post('/login', function(req, res) {
@@ -12,14 +24,16 @@ Router.post('/login', function(req, res) {
         userpass = req.body.pass;
     User.findOne({ emailusr: username }).exec()
         .then(doc => {
-            console.log(doc.pwordusr);
             bcrypt.compare(userpass, doc.pwordusr)
                 .then(validPword => {
                     let result;
                     if (!validPword) {
                         result = { access: '', msg: 'Las credenciales no son válidas!! La contraseña no es correcta!!' };
                     } else {
-                        result = { id: doc.identusr, access: 'ok' };
+                        sessusr = req.session;
+                        sessusr.username = username;
+                        sessusr.userId = doc.identusr;
+                        result = { id: doc.identusr, username: doc.emailusr, access: 'ok' };
                     }
                     res.send(result);
                 });
@@ -30,6 +44,17 @@ Router.post('/login', function(req, res) {
             console.log('Error en la autenticación del usuario: ');
             console.error(error);
         });
+});
+
+// Terminación de sesisión y salida de la App //
+Router.get('/logout', function(req, res) {
+    req.session.destroy(function(error) {
+        if (error) {
+            console.error(error);
+        } else {
+            res.redirect('/');
+        }
+    });
 });
 
 // Inclusión de datos básicos del Usuario  //

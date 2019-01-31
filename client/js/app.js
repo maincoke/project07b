@@ -107,7 +107,10 @@ class EventManager {
             }
         });
         $('#logout').click(function() {
-            $('#delete-icon').attr('src', '../img/trash-open.png');
+            //$('#delete-icon').attr('src', '../img/trash-open.png');
+            $.get(EventManager.urlBase + '/logout', function(response) {
+                alert(response.msg);
+            });
         });
     }
 
@@ -138,10 +141,12 @@ class EventManager {
                 this.actualizarEvento(event);
             },
             eventDragStart: (event, jsEvent) => {
-                $('.delete').find('img').attr('src', "img/trash-open.png");
+                $('.delete').find('img').attr('src', "../img/trash-open.png");
                 $('.delete').css('background-color', '#a70f19');
             },
             eventDragStop: (event, jsEvent) => {
+                $('#delete-icon').attr('src', '../img/trash.png');
+                $('.delete').css('background-color', '#8B0913');
                 var trashEl = $('.delete');
                 var ofs = trashEl.offset();
                 var x1 = ofs.left;
