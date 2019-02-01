@@ -6,6 +6,12 @@ class EventManager {
         this.guardarEvento();
     }
 
+    crearFechaMomento(fecha) {
+        let moment = $.fullCalendar.moment.parseZone(fecha).local().format();
+        console.log(moment);
+        return moment;
+    }
+
     obtenerDataInicial() {
         let urlall = this.urlBase + "/all";
         $.get(urlall, (response) => {
@@ -46,12 +52,16 @@ class EventManager {
                     end_hour = $('#end_hour').val();
                     start = start + 'T' + start_hour;
                     end = end + 'T' + end_hour;
+                    start = this.crearFechaMomento(start);
+                    end = this.crearFechaMomento(end);
                     ev = { id: null, title: title, start: start, end: end, allDay: allday };
                 } else {
+                    start = this.crearFechaMomento(start);
                     ev = { id: null, title: title, start: start, allDay: allday };
                 }
                 $.post(urlnew, ev, (response) => {
                     ev.id = response.id;
+                    console.log(response.id);
                     $('.calendario').fullCalendar('renderEvent', ev);
                 }).done((response) => {
                     alert(response.msg);
@@ -125,7 +135,7 @@ class EventManager {
     }
 
     inicializarCalendario(eventos) {
-        let now = new Date().toISOString();
+        let now = this.crearFechaMomento(new Date());
         $('.calendario').fullCalendar({
             header: {
                 left: 'prev,next today',
@@ -137,7 +147,7 @@ class EventManager {
             nowIndicator: true,
             fixedWeekCount: false,
             aspectRatio: 1.70,
-            defaultDate: now.substr(0, 10),
+            defaultDate: now,
             navLinks: true,
             eventStartEditable: true,
             eventDurationEditable: false,
