@@ -11,7 +11,7 @@ class EventManager {
         $.get(urlall, (response) => {
                 console.log(response);
                 $(`<div id="useraccount">${response.username}</div>`).appendTo('.headerCalendar').filter(':first');
-                this.inicializarCalendario(response.schedule);
+                this.inicializarCalendario(response.eventos);
             })
             .fail(() => {
                 alert('No existe una sessión inicializada!!');
@@ -37,8 +37,7 @@ class EventManager {
                 end = '',
                 start_hour = '',
                 end_hour = '',
-                ev = {},
-                evdb = {};
+                ev = {};
 
             if (title != "" && start != "") {
                 if (!allday) {
@@ -47,20 +46,23 @@ class EventManager {
                     end_hour = $('#end_hour').val();
                     start = start + 'T' + start_hour;
                     end = end + 'T' + end_hour;
-                    ev = { title: title, start: start, end: end, allDay: allday };
-                    evdb = { titlesevt: title, dbeginevt: start, datendevt: end, tbeginevt: start_hour, timendevt: end_hour, alldayevt: allday }
+                    ev = { id: null, title: title, start: start, end: end, allDay: allday };
                 } else {
-                    ev = { title: title, start: start, allDay: allday };
-                    evdb = { titlesevt: title, dbeginevt: start, alldayevt: allday }
+                    ev = { id: null, title: title, start: start, allDay: allday };
                 }
-                $.post(urlnew, evdb, (response) => {
-                    alert(response);
+                $.post(urlnew, ev, (response) => {
+                    ev.id = response.id;
+                    $('.calendario').fullCalendar('renderEvent', ev);
+                }).done((response) => {
+                    alert(response.msg);
+                }).fail(() => {
+                    alert('No existe una sessión inicializada!!');
+                    window.location.href = '../index.html';
                 });
-                $('.calendario').fullCalendar('renderEvent', ev);
             } else {
                 alert("Complete los campos obligatorios para el evento");
-                this.inicializarFormulario();
             }
+            this.inicializarFormulario();
         });
     }
 
@@ -124,6 +126,7 @@ class EventManager {
 
     inicializarCalendario(eventos) {
         let now = new Date().toISOString();
+        console.log(now);
         $('.calendario').fullCalendar({
             header: {
                 left: 'prev,next today',
@@ -131,7 +134,6 @@ class EventManager {
                 right: 'month,agendaWeek,basicDay'
             },
             locale: 'es',
-            weekNumberCalculation: 'ISO',
             timezone: 'local',
             nowIndicator: true,
             fixedWeekCount: false,

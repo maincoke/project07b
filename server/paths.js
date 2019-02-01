@@ -41,7 +41,6 @@ Router.post('/login', function(req, res) {
             let wrong = { access: '', msg: 'Cuenta de usuario no se encuentra registrada!!' };
             res.send(wrong);
             console.log('Error en la autenticación del usuario: ');
-            console.error(error);
         });
 });
 
@@ -69,19 +68,50 @@ Router.post('/newuser', function(req, res) {
                 pwordusr: pwordHashed,
             });
             newuser.save().then(doc => {
-                let result = { id: doc.identusr, msg: "Registro de usuario agregado con éxito!!" };
-                res.send(result);
-            });
+                    let result = { id: doc.identusr, msg: "Registro de usuario agregado con éxito!!" };
+                    res.send(result);
+                })
+                .catch(function(error) {
+                    let wrong = { msg: "Hubo un error en el registro de usuario!!" };
+                    res.send(wrong);
+                    console.log('Error en el registro de usuario: ');
+                });
         })
         .catch(function(error) {
-            let wrong = { msg: "Hubo un error en el registro de usuario!!" };
+            let wrong = { msg: "Error: La contraseña no se logró generar con éxito!!" };
             res.send(wrong);
-            console.log('Error en el registro de usuario: ');
-            console.error(error);
         });
 });
 
-
+// Inclusión de un nuevo evento del usuario para la Agenda //
+Router.post('/new', function(req, res) {
+    let sessusr = req.session;
+    if (sessusr.username) {
+        User.findOne({ identusr: sessusr.userId }).exec()
+            .then(doc => {
+                let event = req.body;
+                event.id = new objectId;
+                doc.schedule.push(event);
+                doc.save().then((evtusr) => {
+                        let success = { id: event.id, msg: "Evento agendado con éxito!!" };
+                        res.send(success);
+                    })
+                    .catch(error => {
+                        let wrong = { msg: 'Hubo un error en el registro del evento!!' };
+                        res.send(wrong);
+                        console.log('Error en la inclusión del evento: ');
+                        console.error(error);
+                    });
+            })
+            .catch(error => {
+                let wrong = { msg: 'Cuenta de usuario no existe ó expiró la sessión!!' };
+                res.send(wrong);
+                console.log('Error en la autenticación del usuario: ');
+            });
+    } else {
+        res.status(400).send();
+    }
+});
 
 // Eliminación de evento en la agenda del Usuario //
 Router.post('/delete/:id', function(req, res) {
@@ -106,7 +136,7 @@ Router.get('/all', function(req, res) {
         User.findOne({ emailusr: sessusr.username }).exec()
             .then(doc => {
                 let datauser = { username: doc.emailusr, eventos: doc.schedule };
-                res.json(datauser);
+                res.send(datauser);
             })
             .catch(error => {
                 let wrong = { msg: 'Cuenta de usuario no existe ó expiró la sessión!!' };

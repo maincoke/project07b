@@ -29,7 +29,7 @@ app.use(session({
     resave: false,
     rolling: true,
     saveUninitialized: false,
-    cookie: { maxAge: 120000 },
+    cookie: { maxAge: 1200000, expires: new Date(Date.now() + 1200000) },
     store: new levelSession('./user/session/schedule')
 }));
 app.use(express.static('../client'));
