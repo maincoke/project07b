@@ -78,25 +78,18 @@ class EventManager {
     }
 
     actualizarEvento(evento) {
-        let start = moment(evento.start).format('YYYY-MM-DD HH:mm:ss'),
-            end = moment(evento.end).format('YYYY-MM-DD HH:mm:ss'),
+        let start = this.crearFechaMomento(evento.start),
+            end = this.crearFechaMomento(evento.end),
             allday = evento.allDay,
-            start_date,
-            end_date,
-            start_hour,
-            end_hour,
             event = {};
-        start_date = start.substr(0, 10);
         if (!allday) {
-            end_date = end.substr(0, 10);
-            start_hour = start.substr(11, 8);
-            end_hour = end.substr(11, 8);
-            event = { identievt: evento.id, dbeginevt: start_date, datendevt: end_date, tbeginevt: start_hour, timendevt: end_hour };
+            event = { id: evento.id, start: start, end: end };
         } else {
-            event = { identievt: evento.id, dbeginevt: start_date };
+            event = { id: evento.id, start: start };
         }
-        $.post(this.urlBase + '/update' + evento.id, event, (response) => {
-            alert(data.msg);
+        console.log(event);
+        $.post(this.urlBase + '/update', event, (response) => {
+            alert(response);
         }).fail(() => {
             alert("No existe una sessión inicializada ó expiró la sessión!!");
             window.location.href = '../index.html';
