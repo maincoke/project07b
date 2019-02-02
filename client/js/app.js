@@ -8,29 +8,19 @@ class EventManager {
 
     crearFechaMomento(fecha) {
         let moment = $.fullCalendar.moment.parseZone(fecha).local().format();
-        console.log(moment);
         return moment;
     }
 
     obtenerDataInicial() {
         let urlall = this.urlBase + "/all";
         $.get(urlall, (response) => {
-                console.log(response);
                 $(`<div id="useraccount">${response.username}</div>`).appendTo('.headerCalendar').filter(':first');
                 this.inicializarCalendario(response.eventos);
             })
             .fail(() => {
-                alert('No existe una sessión inicializada!!');
+                alert('No existe una sessión inicializada ó expiró la sessión!!');
                 window.location.href = '../index.html';
             });
-    }
-
-    eliminarEvento(evento) {
-        let eventId = evento.id,
-            urldel = this.urlBase + "/delete/";
-        $.post(urldel + eventId, { id: eventId }, (response) => {
-            alert(response);
-        });
     }
 
     guardarEvento() {
@@ -61,12 +51,11 @@ class EventManager {
                 }
                 $.post(urlnew, ev, (response) => {
                     ev.id = response.id;
-                    console.log(response.id);
-                    $('.calendario').fullCalendar('renderEvent', ev);
+                    $('.calendario').fullCalendar('renderEvent', ev, true);
                 }).done((response) => {
                     alert(response.msg);
                 }).fail(() => {
-                    alert('No existe una sessión inicializada!!');
+                    alert('No existe una sessión inicializada ó expiró la sessión!!');
                     window.location.href = '../index.html';
                 });
             } else {
@@ -74,6 +63,18 @@ class EventManager {
             }
             this.inicializarFormulario();
         });
+    }
+
+    eliminarEvento(evento) {
+        let eventId = evento.id,
+            urldel = this.urlBase + "/delete/";
+        $.post(urldel + eventId, (response) => {
+            alert(response);
+        }).fail(() => {
+            alert("No existe una sessión inicializada ó expiró la sessión!!");
+            window.location.href = '../index.html';
+        });
+        $('.calendario').fullCalendar('rerenderEvents');
     }
 
     actualizarEvento(evento) {
@@ -96,6 +97,9 @@ class EventManager {
         }
         $.post(this.urlBase + '/update' + evento.id, event, (response) => {
             alert(data.msg);
+        }).fail(() => {
+            alert("No existe una sessión inicializada ó expiró la sessión!!");
+            window.location.href = '../index.html';
         });
     }
 

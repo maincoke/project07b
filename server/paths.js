@@ -1,7 +1,5 @@
 const Router = require('express').Router();
 const bcrypt = require('bcrypt');
-const session = require('express-session');
-const levelSession = require('level-session-store');
 const mongoose = require('mongoose');
 const objectId = mongoose.Types.ObjectId;
 const User = require('./model.js');
@@ -100,7 +98,6 @@ Router.post('/new', function(req, res) {
                         let wrong = { msg: 'Hubo un error en el registro del evento!!' };
                         res.send(wrong);
                         console.log('Error en la inclusión del evento: ');
-                        console.error(error);
                     });
             })
             .catch(error => {
@@ -115,10 +112,22 @@ Router.post('/new', function(req, res) {
 
 // Eliminación de evento en la agenda del Usuario //
 Router.post('/delete/:id', function(req, res) {
-    let userid = req.params.id;
-    User.remove({ userId: userid }).then(() => {
-        res.send("El usuario fue eliminado con éxito!!");
-    });
+    let sessusr = req.session;
+    if (sessusr.username) {
+        User.findOneAndUpdate({ identusr: sessusr.userId }, { $pull: { schedule: { id: req.params.id } } }, (error, doc) => {
+            if (!error) {
+                let scheduleDoc = doc.schedule;
+                let eventdel = scheduleDoc.findIndex(evt => evt.id == req.params.id);
+                res.send("El evento:\n [ " + scheduleDoc[eventdel].title + " ],\nfue borrado con éxito!!");
+            } else {
+                res.send("Hubo un error al borrar el evento!!");
+                console.log('Error en la eliminación del evento: ');
+                console.error(error);
+            }
+        });
+    } else {
+        res.status(400).send();
+    }
 });
 
 // Obtener un usuario por su ID
