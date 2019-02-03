@@ -1,3 +1,5 @@
+/***      Estilos personalizados para la página del Calendario ***/
+
 *,
 *:after,
 *:before {
@@ -23,6 +25,9 @@ body {
     margin: 0;
 }
 
+
+/*-- Estilo para el Encabezado de la pagina del Calendario --*/
+
 .headerCalendar {
     width: 100%;
     height: auto;
@@ -37,6 +42,20 @@ body {
     align-items: center;
 }
 
+#useraccount {
+    font-family: 'Neucha', cursive;
+    font-size: 1.25rem;
+}
+
+
+/*-- Estilo para el contenedor de los datos del Calendario --*/
+
+.dataContainer {
+    display: flex;
+    width: 100%;
+    height: 80%;
+}
+
 .calendarDataContainer {
     width: 70%;
     height: 100%;
@@ -46,11 +65,8 @@ body {
     flex-direction: column;
 }
 
-.dataContainer {
-    display: flex;
-    width: 100%;
-    height: 80%;
-}
+
+/*-- Estilo para el contenedor principal del Calendario --*/
 
 .mainCalendarContainer {
     width: 100%;
@@ -58,12 +74,18 @@ body {
     background: rgba(0, 0, 0, 0.5);
 }
 
+
+/*-- Estilo para el contenedor secundario del Calendario --*/
+
 .calendarContainer {
     width: 97%;
     height: 100%;
     margin: 8px;
     color: #FFFFFF;
 }
+
+
+/*-- Estilo para el formulario de datos para el ingreso de eventos en el Calendario --*/
 
 .formContainer {
     width: 30%;
@@ -76,18 +98,16 @@ body {
     align-items: center;
 }
 
+
+/*-- Estilo para el titulo del Formulario de datos del Calendario --*/
+
 .formTitle {
     font-size: 25px;
     margin-top: 20px;
 }
 
-.separator {
-    width: 96%;
-    margin-top: 4px;
-    margin-bottom: 8px;
-    height: 1px;
-    background: #FFFFFF;
-}
+
+/*-- Estilo para el contenedor de controles del formulario de nuveos eventos --*/
 
 .form-inputs {
     display: flex;
@@ -95,8 +115,11 @@ body {
     align-items: center;
 }
 
+
+/*-- Estilo para controles del Formulario de nuevos eventos del Calendario --*/
+
 input {
-    width: 350px;
+    width: 100%;
     height: 25px;
     padding: 5px;
     border: none;
@@ -122,23 +145,20 @@ input:disabled {
     align-items: center;
 }
 
+.separator {
+    width: 96%;
+    margin-top: 4px;
+    margin-bottom: 8px;
+    height: 1px;
+    background: #FFFFFF;
+}
+
 .hour-input {
     width: 48%;
 }
 
 .right {
     margin-left: 3px;
-}
-
-.eventDuration {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.duration-label {
-    margin-top: 6px;
 }
 
 .radio-input {
@@ -162,18 +182,8 @@ input:disabled {
     border: solid #00c5f3 1px;
 }
 
-.fc-button {
-    font-family: 'Kaushan Script', cursive;
-    font-family: 'Neucha', cursive;
-    font-size: 16px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
 
-.fc-today {
-    background: rgba(128, 128, 128, 0.7) !important;
-}
+/*-- Estilo para el boton "Añadir Eventos" en Formulario de eventos del Calendario --*/
 
 .addButton {
     margin-top: 8px;
@@ -190,9 +200,47 @@ input:disabled {
     cursor: pointer;
 }
 
-.drop-event {
-    margin-bottom: 10px;
+.addButton:hover {
+    background: #009CC0;
 }
+
+
+/*-- Estilo para los elementos de eventos del Calendario --*/
+
+.eventDuration {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.duration-label {
+    margin-top: 6px;
+}
+
+.fc-button {
+    font-family: 'Kaushan Script', cursive;
+    font-family: 'Neucha', cursive;
+    font-size: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+table {
+    background-color: transparent !important;
+}
+
+td.fc-day-top {
+    background-color: transparent !important;
+}
+
+.fc-today {
+    background: rgba(128, 128, 128, 0.7) !important;
+}
+
+
+/*-- Estilo para el contenedor de eliminación de eventos del Calendario --*/
 
 .delete {
     width: 100%;
@@ -205,6 +253,13 @@ input:disabled {
     margin-bottom: 75px;
     cursor: pointer;
 }
+
+.drop-event {
+    margin-bottom: 10px;
+}
+
+
+/*-- Estilo para el contenedor de Cierre de Sessón del Usuario --*/
 
 .logout-container {
     display: flex;
@@ -224,13 +279,4 @@ input:disabled {
     font-size: 18px;
     margin-bottom: 4px;
     cursor: pointer;
-}
-
-.addButton:hover {
-    background: #009CC0;
-}
-
-#useraccount {
-    font-family: 'Neucha', cursive;
-    font-size: 1.25rem;
 }

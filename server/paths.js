@@ -1,7 +1,13 @@
+/**
+ * Enrutador de funciones para las peticiones de GET y POST de la App Agenda
+ * 
+ * Importación de paquetes instalados para la funcionalidad de modulos GET Y POST
+ */
 const Router = require('express').Router();
 const bcrypt = require('bcrypt');
 const mongoose = require('mongoose');
 const objectId = mongoose.Types.ObjectId;
+const newuuid4 = require('uuid/v4');
 const User = require('./model.js');
 const BCRYPT_SALT_ROUNDS = 6;
 
@@ -25,6 +31,7 @@ Router.post('/login', function(req, res) {
             if (!validPword) {
                 result = { access: '', msg: 'Las credenciales no son válidas!! La contraseña no es correcta!!' };
             } else {
+                req.session.regenerate(error => { if (error) throw console.error(error) });
                 let sessusr = req.session;
                 sessusr.username = username;
                 sessusr.userId = doc.identusr;
@@ -39,7 +46,7 @@ Router.post('/login', function(req, res) {
     });
 });
 
-// Terminación de sesisión y salida de la App //
+// Terminación de sesisión y salida de la App Agenda //
 Router.get('/logout', function(req, res) {
     req.session.destroy(function(error) {
         if (error) {
@@ -55,11 +62,12 @@ Router.post('/newuser', function(req, res) {
     let pworduser = req.body.user_pword;
     bcrypt.hash(pworduser, BCRYPT_SALT_ROUNDS).then(function(pwordHashed) {
         let newuser = new User({
-            identusr: new objectId,
+            identusr: newuuid4(),
             namesusr: req.body.user_names,
             dbirtusr: req.body.user_dbirt,
             emailusr: req.body.user_email,
             pwordusr: pwordHashed,
+            schedule: [{ id: new objectId }]
         });
         newuser.save().then(doc => {
             let result = { id: doc.identusr, msg: "Registro de usuario agregado con éxito!!" };
@@ -137,7 +145,7 @@ Router.post('/update', function(req, res) {
     }
 });
 
-// Obtener todos los eventos de calendario del usuario
+// Obtención de todos los eventos agendados del usuario para el calendario //
 Router.get('/all', function(req, res) {
     let sessusr = req.session;
     if (sessusr.username) {

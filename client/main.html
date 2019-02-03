@@ -6,19 +6,22 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agenda de usuario</title>
-    <link rel="stylesheet" href="css/fullcalendar.min.css">
-    <link rel="stylesheet" href="css/index.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Kaushan+Script">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Kaushan+Script|Neucha">
     <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
-    <link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="css/fullcalendar.min.css">
+    <link rel="stylesheet" href="css/index.css" />
 </head>
 
 <body>
+    <!-- // Encabezado de pagina principal del Calendario // -->
     <div class="headerCalendar">
         <div>Mi Agenda Personal</div>
     </div>
     <div class="dataContainer">
+        <!-- // Contenedor del Calendario  - FullCalendar// -->
         <div class="calendarDataContainer">
             <div class="mainCalendarContainer">
                 <div class="calendarContainer">
@@ -26,6 +29,7 @@
                 </div>
             </div>
         </div>
+        <!-- // Formulario de ingreso de nuevos eventos para el Calendario // -->
         <div class="formContainer">
             <div class="formTitle">Programar Evento</div>
             <div class="separator"></div>
@@ -45,10 +49,12 @@
                     <button type="submit" id="save" class="addButton">Añadir evento</button>
                 </form>
             </div>
+            <!-- // Espacio contenedor de borrado de eventos del Calendario // -->
             <div id="deleteEvent" class="delete">
                 <div class="drop-event">Eliminar evento</div>
                 <img id="delete-icon" src="img/trash.png" />
             </div>
+            <!-- // Enlace para el cierre de sesion del usuario // -->
             <div class="logout-container">
                 <div class="logoutText" id="logout">
                     <img class="logout-image" src="img/logout.png" />Cerrar Sesión
@@ -59,12 +65,11 @@
 
     <script src="js/jquery.js" type="text/javascript"></script>
     <script src="js/moment.min.js" type="text/javascript"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" type=" text/javascript "></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" type=" text/javascript "></script>
     <script src="js/fullcalendar.min.js" type="text/javascript"></script>
     <script src="js/es.js" type="text/javascript"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js" type="text/javascript"></script>
     <script src="js/app.js" type="text/javascript"></script>
-    <!--script src="bundle.js"></script-->
 </body>
 
 </html>

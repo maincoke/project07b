@@ -1,3 +1,6 @@
+/**
+ * Clase controladora de construccion y funcionalidad del Calendario *
+ */
 class EventManager {
     constructor() {
         this.urlBase = "/schedule";
@@ -6,11 +9,13 @@ class EventManager {
         this.guardarEvento();
     }
 
+    /** Funcion/Evento para la conversión de fechas Moment */
     crearFechaMomento(fecha) {
         let moment = $.fullCalendar.moment.parseZone(fecha).local().format();
         return moment;
     }
 
+    /** Funcion/Evento para la obtención de los eventos agendados previamente */
     obtenerDataInicial() {
         let urlall = this.urlBase + "/all";
         $.get(urlall, (response) => {
@@ -23,6 +28,7 @@ class EventManager {
             });
     }
 
+    /** Funcion/Evento para el envio y registro de nuevos eventos para agregar al calendario */
     guardarEvento() {
         let urlnew = this.urlBase + "/new";
         $('.addButton').click((evt) => {
@@ -65,6 +71,7 @@ class EventManager {
         });
     }
 
+    /** Funcion/Evento para el borrado de los eventos agregados al calendario */
     eliminarEvento(evento) {
         let eventId = evento.id,
             urldel = this.urlBase + "/delete/";
@@ -77,6 +84,7 @@ class EventManager {
         $('.calendario').fullCalendar('rerenderEvents');
     }
 
+    /** Funcion/Evento para la actualización y cambios de eventos agregados al calendario */
     actualizarEvento(evento) {
         let start = this.crearFechaMomento(evento.start),
             end = this.crearFechaMomento(evento.end),
@@ -96,6 +104,7 @@ class EventManager {
         });
     }
 
+    /** Funcion/Evento para la inicialización del Formulario y sus elementos para el registro de eventos al calendario */
     inicializarFormulario() {
         $('#start_date, #titulo, #end_date').val('');
         $('#start_date, #end_date').datepicker({
@@ -131,6 +140,7 @@ class EventManager {
         });
     }
 
+    /** Funcion/Evento para la inicialización de la API Fullcalendar y sus eventos de funcionalidad */
     inicializarCalendario(eventos) {
         let now = this.crearFechaMomento(new Date());
         $('.calendario').fullCalendar({
@@ -179,6 +189,10 @@ class EventManager {
     }
 }
 
+/**
+ * Funcion Ready Document *
+ */
 $(function() {
+    /** Inicialización de Instancia de Objeto para el Calendario */
     const Manager = new EventManager();
 });
