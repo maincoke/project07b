@@ -42,7 +42,7 @@ Router.post('/login', function(req, res) {
     }).catch(error => {
         let wrong = { access: '', msg: 'Cuenta de usuario no se encuentra registrada!!' };
         res.send(wrong);
-        console.log('Error en la autenticación del usuario: ');
+        console.log('Error en la autenticación del usuario: \n' + error);
     });
 });
 
@@ -59,27 +59,36 @@ Router.get('/logout', function(req, res) {
 
 // Inclusión de datos básicos del Usuario  //
 Router.post('/newuser', function(req, res) {
-    let pworduser = req.body.user_pword;
-    bcrypt.hash(pworduser, BCRYPT_SALT_ROUNDS).then(function(pwordHashed) {
-        let newuser = new User({
-            identusr: newuuid4(),
-            namesusr: req.body.user_names,
-            dbirtusr: req.body.user_dbirt,
-            emailusr: req.body.user_email,
-            pwordusr: pwordHashed,
-            schedule: [{ id: new objectId }]
-        });
-        newuser.save().then(doc => {
-            let result = { id: doc.identusr, msg: "Registro de usuario agregado con éxito!!" };
-            res.send(result);
-        }).catch(function(error) {
-            let wrong = { msg: "Hubo un error en el registro de usuario!!" };
+    let username = req.body.user_email;
+    let findmail = User.where({ emailusr: username });
+    findmail.findOne((error) => {
+        if (error) {
+            let pworduser = req.body.user_pword;
+            bcrypt.hash(pworduser, BCRYPT_SALT_ROUNDS).then(function(pwordHashed) {
+                let newuser = new User({
+                    identusr: newuuid4(),
+                    namesusr: req.body.user_names,
+                    dbirtusr: req.body.user_dbirt,
+                    emailusr: req.body.user_email,
+                    pwordusr: pwordHashed,
+                    schedule: [{ id: new objectId }]
+                });
+                newuser.save().then(doc => {
+                    let result = { id: doc.identusr, msg: "Registro de usuario agregado con éxito!!" };
+                    res.send(result);
+                }).catch(function(error) {
+                    let wrong = { msg: "Hubo un error en el registro de usuario!!" };
+                    res.send(wrong);
+                    console.log('Error en el registro de usuario: ');
+                });
+            }).catch(function(error) {
+                let wrong = { msg: "Error: La contraseña no se logró generar con éxito!!" };
+                res.send(wrong);
+            });
+        } else {
+            let wrong = { msg: "La cuenta con la dirección de correo " + username + ",\n ya se encuentra registrada!!" };
             res.send(wrong);
-            console.log('Error en el registro de usuario: ');
-        });
-    }).catch(function(error) {
-        let wrong = { msg: "Error: La contraseña no se logró generar con éxito!!" };
-        res.send(wrong);
+        }
     });
 });
 

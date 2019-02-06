@@ -22,7 +22,7 @@ const urldb = 'mongodb://localhost/schedule';
 /* Conexión con la BD MongoDB con el framework Mongoose */
 mongoose.connect(urldb, { useNewUrlParser: true });
 const db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error: '));
+db.on('error', console.error.bind(console, 'Hubo un error en la conexión con el MongoDB:\n'));
 db.once('open', function() {
     console.log('Conexión con BD exitosa!!');
     console.log(new Date(Date.now()));
